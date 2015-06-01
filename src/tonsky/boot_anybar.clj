@@ -15,16 +15,22 @@
  
 (core/deftask anybar
   "Reports build status to AnyBar"
-  [p port VAL int "AnyBar port"]
-  (let [port (or port 1738)]
+  [p port    VAL int "AnyBar port"
+   s success VAL str "Command to execute on success"
+   w warning VAL str "Command to execute on warning"
+   f fail    VAL str "Command to execute on fail"]
+  (let [port (or port 1738)
+        success (or success "black")
+        warning (or warning "orange")
+        fail (or fail "exclamation")]
     (fn [next-task]
       (fn [fileset]
         (try
           (send-udp "white" port)
           (util/with-let [_ (next-task fileset)]
             (if (zero? @core/*warnings*)
-              (send-udp "black" port)
-              (send-udp "orange" port)))
+              (send-udp success port)
+              (send-udp warning port)))
           (catch Throwable t
-            (send-udp "red" port)
+            (send-udp fail port)
             (throw t)))))))
