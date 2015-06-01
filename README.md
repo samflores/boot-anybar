@@ -31,6 +31,22 @@ or in the `build.boot`:
         (cljs)))
 ```
 
+You can also change the colors for each build status:
+
+- `-s`, `--success` for successful builds (defaults to black)
+- `-w`, `--warning` for builds with warnings (defaults to orange)
+- `-f`, `--fail` for failed builds (defaults to red)
+
+or in the `build.boot`:
+
+```clj
+(deftask build []
+  (comp (anybar :success "green"
+                :warning "red"
+                :fail "exclamation")
+        (cljs)))
+```
+
 ## License
 
 Copyright © 2015 Nikita Prokopov
